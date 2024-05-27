@@ -40,7 +40,80 @@ impl StateMachine for ClothesMachine {
     type Transition = ClothesAction;
 
     fn next_state(starting_state: &ClothesState, t: &ClothesAction) -> ClothesState {
-        todo!("Exercise 3")
+        match t {
+            ClothesAction::Dry => return handle_dry_action(starting_state),
+            ClothesAction::Wash => return handle_wash_action(starting_state),
+            ClothesAction::Wear => return handle_wear_action(starting_state),
+        };
+        fn handle_wear_action(starting_state: &ClothesState) -> ClothesState {
+            match starting_state {
+                ClothesState::Wet(val) => {
+                    if *val == 1u64 {
+                        return ClothesState::Tattered;
+                    }
+                    ClothesState::Dirty(val - 1)
+                }
+                ClothesState::Clean(val) => {
+                    if *val == 1u64 {
+                        return ClothesState::Tattered;
+                    }
+                    ClothesState::Dirty(val - 1)
+                }
+                ClothesState::Dirty(val) => {
+                    if *val == 1u64 {
+                        return ClothesState::Tattered;
+                    }
+                    ClothesState::Dirty(val - 1)
+                }
+                ClothesState::Tattered => ClothesState::Tattered,
+            }
+        }
+        fn handle_wash_action(starting_state: &ClothesState) -> ClothesState {
+            match starting_state {
+                ClothesState::Wet(val) => {
+                    if *val == 1u64 {
+                        return ClothesState::Tattered;
+                    }
+                    ClothesState::Wet(val - 1)
+                }
+                ClothesState::Clean(val) => {
+                    if *val == 1u64 {
+                        return ClothesState::Tattered;
+                    }
+                    ClothesState::Wet(val - 1)
+                }
+                ClothesState::Dirty(val) => {
+                    if *val == 1u64 {
+                        return ClothesState::Tattered;
+                    }
+                    ClothesState::Wet(val - 1)
+                }
+                ClothesState::Tattered => ClothesState::Tattered,
+            }
+        }
+        fn handle_dry_action(starting_state: &ClothesState) -> ClothesState {
+            match starting_state {
+                ClothesState::Wet(val) => {
+                    if *val == 1u64 {
+                        return ClothesState::Tattered;
+                    }
+                    return ClothesState::Clean(val - 1);
+                }
+                ClothesState::Clean(val) => {
+                    if *val == 1u64 {
+                        return ClothesState::Tattered;
+                    }
+                    return ClothesState::Clean(val - 1);
+                }
+                ClothesState::Dirty(val) => {
+                    if *val == 1u64 {
+                        return ClothesState::Tattered;
+                    }
+                    return ClothesState::Dirty(val - 1);
+                }
+                ClothesState::Tattered => return ClothesState::Tattered,
+            }
+        }
     }
 }
 
